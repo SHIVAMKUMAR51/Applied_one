@@ -1,15 +1,16 @@
+require('dotenv').config();
+
 const express = require('express');
 const taskModule = require('./tasks');
+const errorHandler = require('./errorHandler');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Route to get all tasks
-app.get('/tasks', (req, res) => {
- res.json(taskModule.getAllTasks());
-});
+// Error handling middleware
+app.use(errorHandler);
 
 // Route to get all tasks
 app.get('/tasks', (req, res) => {
@@ -17,12 +18,12 @@ app.get('/tasks', (req, res) => {
 });
 
 // Route to create a new task
-app.post('/tasks', (req, res) => {
+app.post('/tasks', (req, res, next) => {
  try {
     const task = taskModule.createTask(req.body);
     res.status(201).json(task);
  } catch (error) {
-    res.status(400).send(error.message);
+    next(error);
  }
 });
 
@@ -32,7 +33,7 @@ app.put('/tasks/:id', (req, res) => {
     const task = taskModule.updateTask(parseInt(req.params.id), req.body);
     res.json(task);
  } catch (error) {
-    res.status(400).send(error.message);
+   next(error);
  }
 });
 
@@ -42,7 +43,7 @@ app.delete('/tasks/:id', (req, res) => {
     const task = taskModule.deleteTask(parseInt(req.params.id));
     res.json(task);
  } catch (error) {
-    res.status(400).send(error.message);
+   next(error);
  }
 });
 
