@@ -1,51 +1,49 @@
 const express = require('express');
+const taskModule = require('./tasks');
 const app = express();
 const port = 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// In-memory storage for tasks
-let tasks = [];
+// Route to get all tasks
+app.get('/tasks', (req, res) => {
+ res.json(taskModule.getAllTasks());
+});
 
 // Route to get all tasks
 app.get('/tasks', (req, res) => {
- res.json(tasks);
+ res.json(taskModule.getAllTasks());
 });
 
 // Route to create a new task
 app.post('/tasks', (req, res) => {
- const task = {
-    id: tasks.length + 1,
-    title: req.body.title,
-    description: req.body.description,
-    completed: false
- };
- tasks.push(task);
- res.status(201).json(task);
+ try {
+    const task = taskModule.createTask(req.body);
+    res.status(201).json(task);
+ } catch (error) {
+    res.status(400).send(error.message);
+ }
 });
 
 // Route to update a task by ID
 app.put('/tasks/:id', (req, res) => {
- const task = tasks.find(t => t.id === parseInt(req.params.id));
- if (!task) return res.status(404).send('The task with the given ID was not found.');
-
- task.title = req.body.title;
- task.description = req.body.description;
- task.completed = req.body.completed;
-
- res.json(task);
+ try {
+    const task = taskModule.updateTask(parseInt(req.params.id), req.body);
+    res.json(task);
+ } catch (error) {
+    res.status(400).send(error.message);
+ }
 });
 
 // Route to delete a task by ID
 app.delete('/tasks/:id', (req, res) => {
- const task = tasks.find(t => t.id === parseInt(req.params.id));
- if (!task) return res.status(404).send('The task with the given ID was not found.');
-
- const index = tasks.indexOf(task);
- tasks.splice(index, 1);
-
- res.json(task);
+ try {
+    const task = taskModule.deleteTask(parseInt(req.params.id));
+    res.json(task);
+ } catch (error) {
+    res.status(400).send(error.message);
+ }
 });
 
 // Start the server
