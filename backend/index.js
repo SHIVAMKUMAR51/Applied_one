@@ -18,34 +18,51 @@ app.get('/tasks', (req, res) => {
 });
 
 // Route to create a new task
-app.post('/tasks', (req, res, next) => {
- try {
-    const task = taskModule.createTask(req.body);
-    res.status(201).json(task);
- } catch (error) {
-    next(error);
- }
-});
+app.post('/tasks', async (req, res) => {
+   try {
+      const task = req.body;
+      const result = await taskModule.createTask(task);
+      // If the operation was successful, send a 201 Created response
+      res.status(201).json({ message: 'Task created successfully', id: result });
+   } catch (error) {
+      // If an error occurred, send a 500 Internal Server Error response
+      console.error(error);
+      res.status(500).json({ message: 'Failed to create task', error: error.message });
+   }
+  });
 
 // Route to update a task by ID
-app.put('/tasks/:id', (req, res) => {
- try {
-    const task = taskModule.updateTask(parseInt(req.params.id), req.body);
-    res.json(task);
- } catch (error) {
-   next(error);
- }
-});
+app.put('/tasks/:id', async (req, res) => {
+   try {
+      const id = parseInt(req.params.id);
+      const updatedTask = req.body;
+      const result = await updateTask(id, updatedTask);
+      if (result) {
+        res.status(200).json({ message: 'Task updated successfully' });
+      } else {
+        res.status(404).json({ message: 'Task not found' });
+      }
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to update task', error: error.message });
+   }
+  });
 
 // Route to delete a task by ID
-app.delete('/tasks/:id', (req, res) => {
- try {
-    const task = taskModule.deleteTask(parseInt(req.params.id));
-    res.json(task);
- } catch (error) {
-   next(error);
- }
-});
+app.delete('/tasks/:id', async (req, res) => {
+   try {
+      const id = parseInt(req.params.id);
+      const result = await deleteTask(id);
+      if (result) {
+        res.status(204).end(); // No Content
+      } else {
+        res.status(404).json({ message: 'Task not found' });
+      }
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to delete task', error: error.message });
+   }
+  });
 
 // Start the server
 app.listen(port, () => {

@@ -1,59 +1,77 @@
-// task.js
+// tasks.js
 
-let tasks = [];
+const pool = require('./db');
 
 function validateTask(task) {
  if (!task.title) {
     return 'Title is required.';
  }
- // Add more validation rules as needed
  return null;
 }
 
 function getAllTasks() {
- return tasks;
+ return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM tasks';
+    pool.query(query, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+ });
 }
 
 function createTask(task) {
- const error = validateTask(task);
- if (error) throw new Error(error);
-
- const newTask = {
-    id: tasks.length + 1,
-    title: task.title,
-    description: task.description,
-    completed: false
- };
- tasks.push(newTask);
- return newTask;
+ return new Promise((resolve, reject) => {
+    const query = 'INSERT INTO tasks (title, description, completed) VALUES (?, ?, ?)';
+    pool.query(query, [task.title, task.description, task.completed], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results.insertId);
+      }
+    });
+ });
 }
 
 function updateTask(id, updatedTask) {
- const task = tasks.find(t => t.id === id);
- if (!task) throw new Error('The task with the given ID was not found.');
-
- const error = validateTask(updatedTask);
- if (error) throw new Error(error);
-
- task.title = updatedTask.title;
- task.description = updatedTask.description;
- task.completed = updatedTask.completed;
-
- return task;
+ return new Promise((resolve, reject) => {
+    const query = 'UPDATE tasks SET title = ?, description = ?, completed = ? WHERE id = ?';
+    pool.query(query, [updatedTask.title, updatedTask.description, updatedTask.completed, id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results.affectedRows > 0);
+      }
+    });
+ });
 }
 
 function deleteTask(id) {
- const task = tasks.find(t => t.id === id);
- if (!task) throw new Error('The task with the given ID was not found.');
-
- const index = tasks.indexOf(task);
- tasks.splice(index, 1);
-
- return task;
+ return new Promise((resolve, reject) => {
+    const query = 'DELETE FROM tasks WHERE id = ?';
+    pool.query(query, [id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results.affectedRows > 0);
+      }
+    });
+ });
 }
 
 function getCompletedTasks() {
- return tasks.filter(task => task.completed);
+ return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM tasks WHERE completed = 1';
+    pool.query(query, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+ });
 }
 
 module.exports = {

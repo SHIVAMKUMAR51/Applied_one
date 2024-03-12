@@ -1,0 +1,11 @@
+CREATE DATABASE IF NOT EXISTS tasksdb;
+CREATE USER IF NOT EXISTS 'hunterhhh412'@'localhost' IDENTIFIED BY '123456';
+GRANT ALL PRIVILEGES ON tasksdb.* TO 'hunterhhh412'@'localhost';
+FLUSH PRIVILEGES;
+USE tasksdb;
+CREATE TABLE IF NOT EXISTS tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    completed BOOLEAN NOT NULL DEFAULT false
+);
