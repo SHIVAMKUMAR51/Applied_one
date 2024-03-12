@@ -13,9 +13,42 @@ app.use(express.json());
 app.use(errorHandler);
 
 // Route to get all tasks
-app.get('/tasks', (req, res) => {
- res.json(taskModule.getAllTasks());
+app.get('/tasks', async (req, res) => {
+   try {
+      const tasks = await taskModule.getAllTasks();
+      res.json(tasks);
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to retrieve tasks', error: error.message });
+   }
 });
+
+// Route to get all completed tasks
+app.get('/tasks/completed', async (req, res) => {
+   try {
+      const completedTasks = await taskModule.getCompletedTasks();
+      res.json(completedTasks);
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to retrieve completed tasks', error: error.message });
+   }
+   });
+
+// Route to get a single task by ID
+app.get('/tasks/:id', async (req, res) => {
+   try {
+      const id = parseInt(req.params.id);
+      const task = await taskModule.getTaskById(id);
+      if (task) {
+        res.json(task);
+      } else {
+        res.status(404).json({ message: 'Task not found' });
+      }
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to retrieve task', error: error.message });
+   }
+  });
 
 // Route to create a new task
 app.post('/tasks', async (req, res) => {
@@ -36,7 +69,7 @@ app.put('/tasks/:id', async (req, res) => {
    try {
       const id = parseInt(req.params.id);
       const updatedTask = req.body;
-      const result = await updateTask(id, updatedTask);
+      const result = await taskModule.updateTask(id, updatedTask);
       if (result) {
         res.status(200).json({ message: 'Task updated successfully' });
       } else {
@@ -52,7 +85,7 @@ app.put('/tasks/:id', async (req, res) => {
 app.delete('/tasks/:id', async (req, res) => {
    try {
       const id = parseInt(req.params.id);
-      const result = await deleteTask(id);
+      const result = await taskModule.deleteTask(id);
       if (result) {
         res.status(204).end(); // No Content
       } else {

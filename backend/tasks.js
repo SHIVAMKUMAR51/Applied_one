@@ -22,6 +22,19 @@ function getAllTasks() {
  });
 }
 
+function getTaskById(id) {
+  return new Promise((resolve, reject) => {
+     const query = 'SELECT * FROM tasks WHERE id = ?';
+     pool.query(query, [id], (error, results) => {
+       if (error) {
+         reject(error);
+       } else {
+         resolve(results[0]);
+       }
+     });
+  });
+ }
+
 function createTask(task) {
  return new Promise((resolve, reject) => {
     const query = 'INSERT INTO tasks (title, description, completed) VALUES (?, ?, ?)';
@@ -79,5 +92,6 @@ module.exports = {
  createTask,
  updateTask,
  deleteTask,
- getCompletedTasks
+ getCompletedTasks,
+ getTaskById
 };
