@@ -16,20 +16,20 @@ services:
       - db_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_HOST=db
-      - DATABASE_USER=hunterhhh412
-      - DATABASE_PASSWORD=123456
-      - DATABASE_NAME=tasksdb
-      - DATABASE_PORT=3306
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DATABASE_HOST=db
+  #     - DATABASE_USER=hunterhhh412
+  #     - DATABASE_PASSWORD=123456
+  #     - DATABASE_NAME=tasksdb
+  #     - DATABASE_PORT=3306
 
 volumes:
   db_data:
