@@ -6,7 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(to right, #f7f8f9, #e0e4e8);
+    background-color: #081f37;;
   }
   
   #app {
@@ -21,7 +21,8 @@ body {
   h1 {
     text-align: center;
     margin-bottom: 20px;
-    color: #34495e;
+    color: #5fc9f3;
+    font-size: 8vh;
   }
   
   .task-list {
@@ -51,6 +52,7 @@ body {
   
   .task-item input[type="checkbox"] {
     margin-right: 10px;
+    margin: 20px;
   }
   
   .task-item label {
@@ -68,5 +70,44 @@ body {
   
   .task-item button:hover {
     color: #333;
+  }
+
+  #task-input{
+    padding: 20px;
+    border-radius: 10px;
+    outline: none;
+    font-family: "Titillium Web", sans-serif;
+    margin: 20px;
+    font-size: 16px;
+
+  }
+
+  .btn {
+    background: #3498db;
+    background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+    background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+    background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+    background-image: -o-linear-gradient(top, #3498db, #2980b9);
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    font-family: Georgia;
+    color: #fcf9fc;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+    cursor: pointer;
   }
   
