@@ -3,10 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const taskModule = require('./task_operations');
-const authenticateJWT = require('./authenticateJWT');
-
-// Apply the JWT authentication middleware to all routes under /tasks
-router.use(authenticateJWT);
 
 // Route to get all tasks
 router.get('/tasks', async (req, res) => {
